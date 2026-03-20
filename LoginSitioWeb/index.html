@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/estilo.css">
+    <title>Log In</title>
+</head>
+<body>
+
+    <div id="CuadroLogin">
+        <div class="contenido_centrado">
+            <img id="logo" src="img/logo_usuario.png"/>
+        </div>
+        <div class="contenido_centrado">
+            <div class="campo_redondeado">
+                <img src="img/icono_usuario.png" />
+                <div class="linea_vertical"></div>
+                <input id="input_nombre" type="text" placeholder="Nombre de usuario"/>
+            </div>
+        </div>
+        <div class="contenido_centrado">
+            <div class="campo_redondeado">
+                <img src="img/icono_candado.png" />
+                <div class="linea_vertical"></div>
+                <input id="input_contrasena" placeholder="Contraseña" type="password">
+            </div>
+        </div>
+        <div class="contenido_centrado">
+            <button onclick="IniciarSesion()" id="boton_login">Log In</button>
+        </div>
+    </div>
+    
+</body>
+
+<script src="./js/index.js"></script>
+</html>
