@@ -10,8 +10,13 @@ function IniciarSesion(){
     fetch("http://localhost:3000/login", {
         method: "POST",
         body: JSON.stringify(informacion_login)
-    }).then(recurso => recurso.json()).then(respuesta => {
-        console.log(respuesta);
+    }).then(recurso => {
+        if(recurso.status == 200){
+            recurso.json().then(respuesta => {
+                alert(respuesta.mensaje);
+                console.log(respuesta.token_acceso);
+            });
+        }
     });
 }
 

@@ -1,10 +1,13 @@
 const http = require("node:http");
+const jwt = require("jsonwebtoken")
 const puerto = 3000;
 
 // Usuario
 var usuario_nombre = "Julian";
 var usuario_contrasena = "1235";
 var usuarion_frase = "katzenlicht"
+
+const llave_secreta_para_firmar_jwt = "qazwsxedcrfvtgbyhnujmikolp1973486250";
 
 const server = http.createServer((request, response) => {
 
@@ -23,9 +26,17 @@ const server = http.createServer((request, response) => {
                 const objeto_login = JSON.parse(info);
 
                 if(objeto_login.nombre == usuario_nombre && objeto_login.contrasena == usuario_contrasena){
+
+                    const token = jwt.sign({username: usuario_nombre}, llave_secreta_para_firmar_jwt, {expiresIn: "30s"});
+
+                    console.log(token);
+                
+
                     response.statusCode = 200;
                     response.setHeader("Content-Type", "application/json");
-                    response.end(JSON.stringify({mensaje: "Iniciaste sesion correctamente"}));
+                    response.end(JSON.stringify({mensaje: "Iniciaste sesion correctamente",
+                        token_acceso: token
+                    }));
                 }
                 else{
                     response.statusCode = 401;
