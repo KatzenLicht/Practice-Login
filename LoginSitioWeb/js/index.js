@@ -14,8 +14,15 @@ function IniciarSesion(){
         if(recurso.status == 200){
             recurso.json().then(respuesta => {
                 alert(respuesta.mensaje);
-                console.log(respuesta.token_acceso);
+                //console.log(respuesta.token_acceso);
+                sessionStorage.setItem("token_sesion", respuesta.token_acceso);
+                window.location.href = "cuenta.html"
             });
+        }
+        else{
+            recurso.json().then(respuesta => {
+                alert(respuesta.mensaje);
+            })
         }
     });
 }
