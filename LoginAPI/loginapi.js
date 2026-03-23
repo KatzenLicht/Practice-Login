@@ -39,7 +39,13 @@ const server = http.createServer((request, response) => {
                     }));
                     return;
                 }
-                console.log("Si tengo ese usuario en mis registros");
+                response.statusCode = 200;
+                response.setHeader("Content-Type", "application/json");
+                response.end(JSON.stringify({
+                    "frase" : usuarion_frase,
+                    "mensaje" : "Acceso concedido",
+                    "usuario" : decoded
+                }))
             });
 
         break;
