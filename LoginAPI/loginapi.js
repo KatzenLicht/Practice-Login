@@ -5,7 +5,7 @@ const puerto = 3000;
 // Usuario
 var usuario_nombre = "Julian";
 var usuario_contrasena = "1235";
-var usuarion_frase = "katzenlicht"
+var usuario_frase = "katzenlicht"
 
 const llave_secreta_para_firmar_jwt = "qazwsxedcrfvtgbyhnujmikolp1973486250";
 
@@ -19,8 +19,6 @@ const server = http.createServer((request, response) => {
 
     switch(request.method){
         case "GET":
-            const authHeader = request.headers["authorization"];
-
             if(!authHeader || !authHeader == null || authHeader == "null"){
                 response.statusCode = 401;
                 response.setHeader("Content-Type", "application/json");
@@ -42,7 +40,7 @@ const server = http.createServer((request, response) => {
                 response.statusCode = 200;
                 response.setHeader("Content-Type", "application/json");
                 response.end(JSON.stringify({
-                    "frase" : usuarion_frase,
+                    "frase" : usuario_frase,
                     "mensaje" : "Acceso concedido",
                     "usuario" : decoded
                 }))
@@ -50,29 +48,58 @@ const server = http.createServer((request, response) => {
 
         break;
         case "POST":
-            request.on("data", info => {
-                console.log(info.toString());
-                const objeto_login = JSON.parse(info);
+            if(request.url == "/login"){
+                request.on("data", info => {
+                    const objeto_login = JSON.parse(info);
 
-                if(objeto_login.nombre == usuario_nombre && objeto_login.contrasena == usuario_contrasena){
+                    if(objeto_login.nombre == usuario_nombre && objeto_login.contrasena == usuario_contrasena){
 
-                    const token = jwt.sign({username: usuario_nombre}, llave_secreta_para_firmar_jwt, {expiresIn: "30s"});
+                        const token = jwt.sign({username: usuario_nombre}, llave_secreta_para_firmar_jwt, {expiresIn: "30s"});
 
-                    console.log(token);
-                
-
-                    response.statusCode = 200;
-                    response.setHeader("Content-Type", "application/json");
-                    response.end(JSON.stringify({mensaje: "Iniciaste sesion correctamente",
-                        token_acceso: token
-                    }));
-                }
-                else{
+                        response.statusCode = 200;
+                        response.setHeader("Content-Type", "application/json");
+                        response.end(JSON.stringify({mensaje: "Iniciaste sesion correctamente",
+                            token_acceso: token
+                        }));
+                    }
+                    else{
+                        response.statusCode = 401;
+                        response.setHeader("Content-Type", "application/json");
+                        response.end(JSON.stringify({mensaje: "Usuario y/o contraseña incorrectos"}));
+                    }
+                })
+            }
+            else if(request.url == "/cambiar_frase"){
+                if(!authHeader || !authHeader == null || authHeader == "null"){
                     response.statusCode = 401;
                     response.setHeader("Content-Type", "application/json");
-                    response.end(JSON.stringify({mensaje: "Usuario y/o contraseña incorrectos"}));
+                    response.end(JSON.stringify({
+                        mensaje: "Token no proporcionado"
+                    }));
+                    return;
                 }
-            })
+                jwt.verify(authHeader, llave_secreta_para_firmar_jwt, (err, decoded) => {
+                    if(err){
+                        response.statusCode = 401;
+                        response.setHeader("Content-Type", "application/json");
+                        response.end(JSON.stringify({
+                            mensaje: "Token invalido o expirado"
+                        }));
+                        return;
+                    }
+                    request.on("data", info => {
+                        const objeto_frase = JSON.parse(info);
+                        usuario_frase = objeto_frase.frase;
+
+                        response.statusCode = 200;
+                        response.setHeader("Content-Type", "application/json");
+                        response.end(JSON.stringify({
+                            mensaje : "Frase cambiada correctamente",
+                            nueva_frase : usuario_frase
+                        }));
+                    });
+                }); 
+            }
         break;
         case "PUT":
             
