@@ -13,12 +13,35 @@ const server = http.createServer((request, response) => {
 
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    response.setHeader("Access-Control-Allow-Headers", "*");
 
     const authHeader = request.headers['authorization'];
 
     switch(request.method){
         case "GET":
-            
+            const authHeader = request.headers["authorization"];
+
+            if(!authHeader || !authHeader == null || authHeader == "null"){
+                response.statusCode = 401;
+                response.setHeader("Content-Type", "application/json");
+                response.end(JSON.stringify({
+                    mensaje: "Token no proporcionado"
+                }));
+            return;
+            }
+
+            jwt.verify(authHeader, llave_secreta_para_firmar_jwt, (err, decoded) => {
+                if(err){
+                    response.statusCode = 401;
+                    response.setHeader("Content-Type", "application/json");
+                    response.end(JSON.stringify({
+                        mensaje: "Token invalido o expirado"
+                    }));
+                    return;
+                }
+                console.log("Si tengo ese usuario en mis registros");
+            });
+
         break;
         case "POST":
             request.on("data", info => {
