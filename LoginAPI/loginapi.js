@@ -54,7 +54,7 @@ const server = http.createServer((request, response) => {
 
                     if(objeto_login.nombre == usuario_nombre && objeto_login.contrasena == usuario_contrasena){
 
-                        const token = jwt.sign({username: usuario_nombre}, llave_secreta_para_firmar_jwt, {expiresIn: "30s"});
+                        const token = jwt.sign({username: usuario_nombre}, llave_secreta_para_firmar_jwt, {expiresIn: "5m"});
 
                         response.statusCode = 200;
                         response.setHeader("Content-Type", "application/json");

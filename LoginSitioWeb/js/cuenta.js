@@ -44,3 +44,8 @@ function CambiarFrase(){
         });
     });
 }
+
+function CerrarSesion(){
+    sessionStorage.removeItem("token_sesion");
+    window.location.href = "index.html";
+}
